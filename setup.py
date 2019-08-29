@@ -23,8 +23,7 @@ setup(
         'mergex.native'
     ],
 	package_data={
-        'mergex.native': ['MergeXml'],
-        'mergex.native': ['MergeXml.exe']
+        'mergex.native': ['MergeXml', 'MergeXml.exe']
     },
     install_requires=[
         'gitpython'

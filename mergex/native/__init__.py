@@ -14,7 +14,7 @@ def program():
         return abspath('%s/MergeXml.exe'%(dirname(__file__)))
     return abspath('%s/MergeXml'%(dirname(__file__)))
 # -----------------------------------------------------------------------------
-# fomart
+# format
 # -----------------------------------------------------------------------------
 def format(file):
     return call([program(), 
