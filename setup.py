@@ -20,10 +20,11 @@ setup(
     url="",
     packages=[
         'mergex',
-        'mergex.native',
+        'mergex.native'
     ],
 	package_data={
         'mergex.native': ['MergeXml'],
+        'mergex.native': ['MergeXml.exe']
     },
     install_requires=[
         'gitpython'

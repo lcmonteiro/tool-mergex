@@ -5,12 +5,19 @@
 from subprocess import call
 from os.path    import dirname
 from os.path    import abspath
+from platform   import system
+# -----------------------------------------------------------------------------
+# program path 
+# -----------------------------------------------------------------------------
+def program():
+    if system() == 'Windows':
+        return abspath('%s/MergeXml.exe'%(dirname(__file__)))
+    return abspath('%s/MergeXml'%(dirname(__file__)))
 # -----------------------------------------------------------------------------
 # fomart
 # -----------------------------------------------------------------------------
 def format(file):
-    return call([
-        abspath('%s/MergeXml'%(dirname(__file__))), 
+    return call([program(), 
         '-m', 'normalize',
         '-l', 'ERROR',
         '-i', file
