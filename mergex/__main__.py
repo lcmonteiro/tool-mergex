@@ -2,32 +2,52 @@
 # -----------------------------------------------------------------------------
 # Imports
 # -----------------------------------------------------------------------------
+# extern
+# ---------------------------------------------------------
 from git      import Repo
 from git.exc  import GitCommandError
 from sys      import argv
 from argparse import ArgumentParser
 from tempfile import NamedTemporaryFile
-from shutil   import copy2 as copy
+from shutil   import copyfileobj as copy
+from hashlib  import md5
+# ---------------------------------------------------------
+# internal
+# ---------------------------------------------------------
 from .native  import format
+# -----------------------------------------------------------------------------
+# md5
+# -----------------------------------------------------------------------------
+def md5sum(path):
+    with open(path, 'r', encoding='utf-8') as f:
+        return md5(f.read()).hexdigest()
+    return ''
 # -----------------------------------------------------------------------------
 # merge
 # -----------------------------------------------------------------------------
 def temp_file():
-    temp = NamedTemporaryFile()
+    temp = NamedTemporaryFile('+w')
     return temp
 # -----------------------------------------------------------------------------
 # merge
 # -----------------------------------------------------------------------------
 def merge(current, base, other):
     try:
-        #temp = temp_file()
-        #copy(current, temp.name)
-        #copy(temp.name, current)
-
+        # backup file
+        backup = temp_file()
+        copy(open(current), backup)
+        # normalize files
         format(current)
         format(base)
         format(other)
-        return Repo().git.merge_file(current, base, other)
+        # check diff between current and other 
+        if md5sum(current) == md5sum(other):
+            # git merge tool
+            return Repo().git.merge_file(current, base, other)
+        else:
+            # restore the current
+            copy(backup, open(current, 'w'))
+            return 0
     except GitCommandError as e:
         return e.status
     except Exception as e:
