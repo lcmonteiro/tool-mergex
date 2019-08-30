@@ -36,9 +36,11 @@ def merge(current, base, other):
         # git merge tool
         return Git().merge_file(current, base, other)
     except GitCommandError as e:
+        print('error', e.status)
+        return 0
         return e.status
-    #except Exception as e:
-    #    print('exception', e)
+    except Exception as e:
+        print('exception', e)
     return 255
 # -----------------------------------------------------------------------------
 # main
