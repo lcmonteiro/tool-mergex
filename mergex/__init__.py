@@ -20,28 +20,36 @@ from .native  import format
 # -----------------------------------------------------------------------------
 def merge(current, base, other):
     try:
-        # backup
-        backup = TemporaryFile()
-        copy(open(current,'rb'), backup)
-        backup.seek(0)
+        # origin
+        origin_corrent = TemporaryFile()
+        origin_other   = TemporaryFile()
+        copy(open(current,'rb'), origin_corrent)
+        copy(open(other  ,'rb'), origin_other)
+        origin_corrent.seek(0)
+        origin_other.seek(0)
         # normalize files
         format(current)
         format(base)
         format(other)
         # check diff between current and other 
         if equal(current, other):
-            # restore the current
-            copy(backup, open(current, 'wb'))
+            # restore current with origin/current
+            copy(origin_corrent, open(current, 'wb'))
             return 0
         # git merge tool
-        return Git().merge_file(current, base, other)
+        Git().merge_file(current, base, other)
+        # recheck diff between current and other
+        if equal(current, other):
+            # restore current with origin/other
+            copy(origin_other, open(current, 'wb'))
+            return 0
     except GitCommandError as e:
         print('error', e.status)
-        return 0
         return e.status
     except Exception as e:
         print('exception', e)
-    return 255
+        return 255
+    return 0
 # -----------------------------------------------------------------------------
 # main
 # -----------------------------------------------------------------------------
