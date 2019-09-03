@@ -18,7 +18,7 @@ from .native  import format
 # -----------------------------------------------------------------------------
 # merge
 # -----------------------------------------------------------------------------
-def merge(current, base, other):
+def merge(current, base, other, type):
     try:
         # origin
         origin_corrent = TemporaryFile()
@@ -28,23 +28,23 @@ def merge(current, base, other):
         origin_corrent.seek(0)
         origin_other.seek(0)
         # normalize files
-        format(current)
-        format(base)
-        format(other)
+        format(current, type)
+        format(base   , type)
+        format(other  , type)
         # check diff between current and other 
         if equal(current, other):
             # restore current with origin/current
             copy(origin_corrent, open(current, 'wb'))
             return 0
         # git merge tool
-        Git().merge_file(current, base, other)
+        Git().merge_file('-L', 'mine', '-L', 'base', '-L', 'theirs', current, base, other)
         # recheck diff between current and other
         if equal(current, other):
             # restore current with origin/other
             copy(origin_other, open(current, 'wb'))
             return 0
     except GitCommandError as e:
-        print('error', e.status)
+        # print('error', e.status)
         return e.status
     except Exception as e:
         print('exception', e)
@@ -58,8 +58,9 @@ def main():
     parser.add_argument('current', type=str, default = '')
     parser.add_argument('base',    type=str, default = '')
     parser.add_argument('other',   type=str, default = '')
+    parser.add_argument('--type',  type=str, default = '')
     args = parser.parse_args()
-    return merge(args.current, args.base, args.other)
+    return merge(args.current, args.base, args.other, args.type)
 # -----------------------------------------------------------------------------
 # end
 # -----------------------------------------------------------------------------
