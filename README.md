@@ -5,7 +5,7 @@
 ### git config
 
 First up is defining the merge driver.
-This is done in the `.gitconfig` file:
+This is done in the `.gitconfig` or `.git/config` file:
 
 ```
 [merge "mergex-arxml"]
@@ -18,9 +18,9 @@ This is done in the `.gitconfig` file:
 
 ### git attributes
 
-Configure the file patterns that you want to use mergex as a merger tool in the `.gitattributes` file:
+Configure the file patterns that you want to use mergex as a merger tool in the `.gitattributes` or `.git/info/attributes` file:
 
 ```
-*.arxml merge=mergex
-*.xdm   merge=mergex
+*.arxml merge=mergex-arxml
+*.xdm   merge=mergex-xdm
 ```
