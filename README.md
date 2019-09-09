@@ -1,6 +1,9 @@
 # tool-mergex
 
 ## install
+``` 
+python ./setup.py install 
+```
 
 ### git config
 
@@ -9,10 +12,10 @@ This is done in the `.gitconfig` or `.git/config` file:
 
 ```
 [merge "mergex-arxml"]
-	name = A custom merge driver used to resolve conflicts in XML files
+	name = A custom merge driver used to resolve conflicts in arxml files
 	driver = mergex %A %O %B --type arxml 
 [merge "mergex-xdm"]
-	name = A custom merge driver used to resolve conflicts in XML files
+	name = A custom merge driver used to resolve conflicts in xdm files
 	driver = mergex %A %O %B --type xdm
 ```
 
