@@ -51,9 +51,9 @@ def merge(current, base, other, type):
         return 255
     return 0
 # -----------------------------------------------------------------------------
-# main
+# main - merge
 # -----------------------------------------------------------------------------
-def main():
+def main_merge():
     parser = ArgumentParser()
     parser.add_argument('current', type=str, default = '')
     parser.add_argument('base',    type=str, default = '')
@@ -61,6 +61,15 @@ def main():
     parser.add_argument('--type',  type=str, default = '')
     args = parser.parse_args()
     return merge(args.current, args.base, args.other, args.type)
+# -----------------------------------------------------------------------------
+# main - format
+# -----------------------------------------------------------------------------
+def main_format():
+    parser = ArgumentParser()
+    parser.add_argument('file'  , type=str, default = '')
+    parser.add_argument('--type', type=str, default = '')
+    args = parser.parse_args()
+    return format(args.file, args.type)
 # -----------------------------------------------------------------------------
 # end
 # -----------------------------------------------------------------------------
