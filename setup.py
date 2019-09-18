@@ -12,7 +12,7 @@ with open("README.md", "r") as fh:
 # -----------------------------------------------------------------------------
 setup(
     name='mergex',  
-    version='0.2',
+    version='0.3',
     author="Luis Monteiro",
     author_email="monteiro.lcm@gmail.com",
     description="MergeXML",

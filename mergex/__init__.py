@@ -14,7 +14,8 @@ from filecmp  import cmp         as equal
 # ---------------------------------------------------------
 # internal
 # ---------------------------------------------------------
-from .native  import format
+# from .native  import format
+from .native  import minimize
 # -----------------------------------------------------------------------------
 # merge
 # -----------------------------------------------------------------------------
@@ -27,10 +28,12 @@ def merge(current, base, other, type):
         copy(open(other  ,'rb'), origin_other)
         origin_corrent.seek(0)
         origin_other.seek(0)
+        # minimize files
+        minimize(current, base, other, type)
         # normalize files
-        format(current, type)
-        format(base   , type)
-        format(other  , type)
+        #format(current, type)
+        #format(base   , type)
+        #format(other  , type)
         # check diff between current and other 
         if equal(current, other):
             # restore current with origin/current
