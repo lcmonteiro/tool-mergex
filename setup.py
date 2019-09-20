@@ -30,8 +30,9 @@ setup(
     ],
 	entry_points={
 	  'console_scripts': [
-		  'mergex  = mergex:main_merge',
-		  'formatx = mergex:main_format'
+		  'mergex    = mergex:main_merge',
+		  'formatx   = mergex:main_format',
+		  'minimizex = mergex:main_minimize'
 	  ]
 	},
  )
