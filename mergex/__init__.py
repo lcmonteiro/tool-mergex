@@ -14,7 +14,7 @@ from filecmp  import cmp         as equal
 # ---------------------------------------------------------
 # internal
 # ---------------------------------------------------------
-# from .native  import format
+from .native  import format
 from .native  import minimize
 # -----------------------------------------------------------------------------
 # merge
@@ -64,6 +64,15 @@ def main_merge():
     parser.add_argument('--type',  type=str, default = '')
     args = parser.parse_args()
     return merge(args.current, args.base, args.other, args.type)
+# -----------------------------------------------------------------------------
+# main - minimize
+# -----------------------------------------------------------------------------
+def main_minimize():
+    parser = ArgumentParser()
+    parser.add_argument('file'  , type=str, default = '', nargs='+')
+    parser.add_argument('--type', type=str, default = '')
+    args = parser.parse_args()
+    return minimize(*args.file, args.type)
 # -----------------------------------------------------------------------------
 # main - format
 # -----------------------------------------------------------------------------
