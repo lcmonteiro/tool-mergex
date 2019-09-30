@@ -21,23 +21,18 @@ from .native  import minimize
 # -----------------------------------------------------------------------------
 def merge(type, current, base, other):
     try:
-        # origin
-        origin_corrent = TemporaryFile()
+        origin_current = TemporaryFile()
         origin_other   = TemporaryFile()
-        copy(open(current,'rb'), origin_corrent)
+        copy(open(current,'rb'), origin_current)
         copy(open(other  ,'rb'), origin_other)
-        origin_corrent.seek(0)
+        origin_current.seek(0)
         origin_other.seek(0)
         # minimize files
-        minimize(type, current, base, other)
-        # format files
-        #format(type, current)
-        #format(type, base   )
-        #format(type, other  )
+        minimize(type, base, current, other)
         # check diff between current and other 
         if equal(current, other):
             # restore current with origin/current
-            copy(origin_corrent, open(current, 'wb'))
+            copy(origin_current, open(current, 'wb'))
             return 0
         # git merge tool
         Git().merge_file('-L', 'mine', '-L', 'base', '-L', 'theirs', current, base, other)
