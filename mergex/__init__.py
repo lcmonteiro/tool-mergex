@@ -19,7 +19,7 @@ from .native  import minimize
 # -----------------------------------------------------------------------------
 # merge
 # -----------------------------------------------------------------------------
-def merge(current, base, other, type):
+def merge(type, current, base, other):
     try:
         # origin
         origin_corrent = TemporaryFile()
@@ -29,11 +29,11 @@ def merge(current, base, other, type):
         origin_corrent.seek(0)
         origin_other.seek(0)
         # minimize files
-        minimize(current, base, other, type)
-        # normalize files
-        #format(current, type)
-        #format(base   , type)
-        #format(other  , type)
+        minimize(type, current, base, other)
+        # format files
+        #format(type, current)
+        #format(type, base   )
+        #format(type, other  )
         # check diff between current and other 
         if equal(current, other):
             # restore current with origin/current
@@ -63,7 +63,7 @@ def main_merge():
     parser.add_argument('other',   type=str, default = '')
     parser.add_argument('--type',  type=str, default = '')
     args = parser.parse_args()
-    return merge(args.current, args.base, args.other, args.type)
+    return merge(args.type, args.current, args.base, args.other)
 # -----------------------------------------------------------------------------
 # main - minimize
 # -----------------------------------------------------------------------------
@@ -72,7 +72,7 @@ def main_minimize():
     parser.add_argument('file'  , type=str, default = '', nargs='+')
     parser.add_argument('--type', type=str, default = '')
     args = parser.parse_args()
-    return minimize(*args.file, args.type)
+    return minimize(args.type, *args.file)
 # -----------------------------------------------------------------------------
 # main - format
 # -----------------------------------------------------------------------------
@@ -81,7 +81,7 @@ def main_format():
     parser.add_argument('file'  , type=str, default = '')
     parser.add_argument('--type', type=str, default = '')
     args = parser.parse_args()
-    return format(args.file, args.type)
+    return format(args.type, args.file)
 # -----------------------------------------------------------------------------
 # end
 # -----------------------------------------------------------------------------
