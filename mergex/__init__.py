@@ -20,6 +20,7 @@ from .native  import minimize
 # merge
 # -----------------------------------------------------------------------------
 def merge(type, current, base, other):
+    print("mergex --type={} {} {} {}".format(type, current, base, other))
     try:
         origin_current = TemporaryFile()
         origin_other   = TemporaryFile()
