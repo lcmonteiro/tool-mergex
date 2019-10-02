@@ -28,7 +28,7 @@ def merge(type, current, base, other):
         origin_current.seek(0)
         origin_other.seek(0)
         # minimize files
-        minimize(type, base, current, other)
+        minimize(type, current, base, other)
         # check diff between current and other 
         if equal(current, other):
             # restore current with origin/current
@@ -42,7 +42,6 @@ def merge(type, current, base, other):
             copy(origin_other, open(current, 'wb'))
             return 0
     except GitCommandError as e:
-        # print('error', e.status)
         return e.status
     except Exception as e:
         print('exception', e)
