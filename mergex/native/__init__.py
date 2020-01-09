@@ -6,6 +6,7 @@ from subprocess import call
 from os.path    import dirname
 from os.path    import abspath
 from platform   import system
+from functools  import reduce
 # -----------------------------------------------------------------------------
 # program path 
 # -----------------------------------------------------------------------------
@@ -16,25 +17,22 @@ def program():
 # -----------------------------------------------------------------------------
 # format
 # -----------------------------------------------------------------------------
-def format(file, type):
+def format(type, file):
     return call([program(), 
         '-m', 'normalize',
         '-l', 'ERROR',
+        '-f', type,
         '-i', file,
-        '-f', type
     ])
 # -----------------------------------------------------------------------------
 # minimize
 # -----------------------------------------------------------------------------
-def minimize(current, base, other, type):
+def minimize(type, *files):
     return call([program(), 
         '-m', 'minimize',
         '-l', 'ERROR',
-        '-i', current,
-        '-i', base,
-        '-i', other,
-        '-f', type
-    ])
+        '-f', type,
+    ] + reduce(lambda v, e: v + ['-i', e], files, []))
 # -----------------------------------------------------------------------------
 # end
 # -----------------------------------------------------------------------------

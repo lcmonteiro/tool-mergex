@@ -12,7 +12,7 @@ with open("README.md", "r") as fh:
 # -----------------------------------------------------------------------------
 setup(
     name='mergex',  
-    version='0.3',
+    version='0.5',
     author="Luis Monteiro",
     author_email="monteiro.lcm@gmail.com",
     description="MergeXML",
@@ -31,6 +31,7 @@ setup(
     entry_points={
       'console_scripts': [
           'mergex    = mergex:main_merge',
+          'diffx     = mergex:main_diff',
           'formatx   = mergex:main_format',
           'minimizex = mergex:main_minimize'
       ]

@@ -19,25 +19,21 @@ from .native  import minimize
 # -----------------------------------------------------------------------------
 # merge
 # -----------------------------------------------------------------------------
-def merge(current, base, other, type):
+def merge(type, current, base, other):
+    print("mergex --type={} {} {} {}".format(type, current, base, other))
     try:
-        # origin
-        origin_corrent = TemporaryFile()
+        origin_current = TemporaryFile()
         origin_other   = TemporaryFile()
-        copy(open(current,'rb'), origin_corrent)
+        copy(open(current,'rb'), origin_current)
         copy(open(other  ,'rb'), origin_other)
-        origin_corrent.seek(0)
+        origin_current.seek(0)
         origin_other.seek(0)
         # minimize files
-        minimize(current, base, other, type)
-        # normalize files
-        #format(current, type)
-        #format(base   , type)
-        #format(other  , type)
+        minimize(type, current, base, other)
         # check diff between current and other 
         if equal(current, other):
             # restore current with origin/current
-            copy(origin_corrent, open(current, 'wb'))
+            copy(origin_current, open(current, 'wb'))
             return 0
         # git merge tool
         Git().merge_file('-L', 'mine', '-L', 'base', '-L', 'theirs', current, base, other)
@@ -47,7 +43,25 @@ def merge(current, base, other, type):
             copy(origin_other, open(current, 'wb'))
             return 0
     except GitCommandError as e:
-        # print('error', e.status)
+        return e.status
+    except Exception as e:
+        print('exception', e)
+        return 255
+    return 0
+# -----------------------------------------------------------------------------
+# diff
+# -----------------------------------------------------------------------------
+def diff(type, current, other):
+    print("mergex --type={} {} {} {}".format(type, current, base, other))
+    try:
+        # minimize files
+        minimize(type, current, other)
+        # check diff between current and other 
+        if equal(current, other):
+            return 0
+        # git diff tool
+        Git().diff_file('-L', 'mine', '-L', 'base', '-L', 'theirs', current, base, other)
+    except GitCommandError as e:
         return e.status
     except Exception as e:
         print('exception', e)
@@ -63,7 +77,18 @@ def main_merge():
     parser.add_argument('other',   type=str, default = '')
     parser.add_argument('--type',  type=str, default = '')
     args = parser.parse_args()
-    return merge(args.current, args.base, args.other, args.type)
+    return merge(args.type, args.current, args.base, args.other)
+
+# -----------------------------------------------------------------------------
+# main - diff
+# -----------------------------------------------------------------------------
+def main_diff():
+    parser = ArgumentParser()
+    parser.add_argument('current', type=str, default = '')
+    parser.add_argument('other',   type=str, default = '')
+    parser.add_argument('--type',  type=str, default = '')
+    args = parser.parse_args()
+    return merge(args.type, args.current, args.base, args.other)
 # -----------------------------------------------------------------------------
 # main - minimize
 # -----------------------------------------------------------------------------
@@ -72,7 +97,7 @@ def main_minimize():
     parser.add_argument('file'  , type=str, default = '', nargs='+')
     parser.add_argument('--type', type=str, default = '')
     args = parser.parse_args()
-    return minimize(*args.file, args.type)
+    return minimize(args.type, *args.file)
 # -----------------------------------------------------------------------------
 # main - format
 # -----------------------------------------------------------------------------
@@ -81,7 +106,7 @@ def main_format():
     parser.add_argument('file'  , type=str, default = '')
     parser.add_argument('--type', type=str, default = '')
     args = parser.parse_args()
-    return format(args.file, args.type)
+    return format(args.type, args.file)
 # -----------------------------------------------------------------------------
 # end
 # -----------------------------------------------------------------------------
