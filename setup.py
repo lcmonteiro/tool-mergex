@@ -22,19 +22,19 @@ setup(
         'mergex',
         'mergex.native'
     ],
-	package_data={
+    package_data={
         'mergex.native': ['MergeXml', 'MergeXml.exe']
     },
     install_requires=[
         'gitpython'
     ],
-	entry_points={
-	  'console_scripts': [
-		  'mergex    = mergex:main_merge',
-		  'formatx   = mergex:main_format',
-		  'minimizex = mergex:main_minimize'
-	  ]
-	},
+    entry_points={
+      'console_scripts': [
+          'mergex    = mergex:main_merge',
+          'formatx   = mergex:main_format',
+          'minimizex = mergex:main_minimize'
+      ]
+    },
  )
  # ----------------------------------------------------------------------------
  # end
