@@ -49,12 +49,42 @@ def merge(type, current, base, other):
         return 255
     return 0
 # -----------------------------------------------------------------------------
+# diff
+# -----------------------------------------------------------------------------
+def diff(type, current, other):
+    print("mergex --type={} {} {} {}".format(type, current, base, other))
+    try:
+        # minimize files
+        minimize(type, current, other)
+        # check diff between current and other 
+        if equal(current, other):
+            return 0
+        # git diff tool
+        Git().diff_file('-L', 'mine', '-L', 'base', '-L', 'theirs', current, base, other)
+    except GitCommandError as e:
+        return e.status
+    except Exception as e:
+        print('exception', e)
+        return 255
+    return 0
+# -----------------------------------------------------------------------------
 # main - merge
 # -----------------------------------------------------------------------------
 def main_merge():
     parser = ArgumentParser()
     parser.add_argument('current', type=str, default = '')
     parser.add_argument('base',    type=str, default = '')
+    parser.add_argument('other',   type=str, default = '')
+    parser.add_argument('--type',  type=str, default = '')
+    args = parser.parse_args()
+    return merge(args.type, args.current, args.base, args.other)
+
+# -----------------------------------------------------------------------------
+# main - diff
+# -----------------------------------------------------------------------------
+def main_diff():
+    parser = ArgumentParser()
+    parser.add_argument('current', type=str, default = '')
     parser.add_argument('other',   type=str, default = '')
     parser.add_argument('--type',  type=str, default = '')
     args = parser.parse_args()
