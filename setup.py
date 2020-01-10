@@ -31,7 +31,7 @@ setup(
     entry_points={
       'console_scripts': [
           'mergex    = mergex:main_merge',
-          'diffx     = mergex:main_diff',
+          'comparex  = mergex:main_compare',
           'formatx   = mergex:main_format',
           'minimizex = mergex:main_minimize'
       ]

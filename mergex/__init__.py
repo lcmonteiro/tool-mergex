@@ -8,7 +8,8 @@ from git.cmd  import Git
 from git.exc  import GitCommandError
 from sys      import argv
 from argparse import ArgumentParser
-from tempfile import TemporaryFile
+from os.path  import join, basename
+from tempfile import TemporaryFile, TemporaryDirectory
 from shutil   import copyfileobj as copy
 from filecmp  import cmp         as equal
 # ---------------------------------------------------------
@@ -49,23 +50,26 @@ def merge(type, current, base, other):
         return 255
     return 0
 # -----------------------------------------------------------------------------
-# diff
+# compare
 # -----------------------------------------------------------------------------
-def diff(type, current, other):
-    print("mergex --type={} {} {} {}".format(type, current, base, other))
-    try:
-        # minimize files
-        minimize(type, current, other)
-        # check diff between current and other 
-        if equal(current, other):
-            return 0
-        # git diff tool
-        Git().diff_file('-L', 'mine', '-L', 'base', '-L', 'theirs', current, base, other)
-    except GitCommandError as e:
-        return e.status
-    except Exception as e:
-        print('exception', e)
-        return 255
+def compare(type, current, other):
+    with TemporaryDirectory() as name:
+        diff = join(name, 'diff')
+        try:        
+            # container
+            copy_other = join(name, basename(other))
+            copy(open(other,'rb'), open(copy_other,'wb'))
+            # minimize files
+            minimize(type, current, copy_other)
+            # git diff tool
+            Git().diff(f'--output={diff}', current, copy_other)
+        except GitCommandError as e:
+            with open(diff, 'r') as f:
+                print(f.read())
+            return e.status
+        except Exception as e:
+            print('exception', e)
+            return 255
     return 0
 # -----------------------------------------------------------------------------
 # main - merge
@@ -82,13 +86,13 @@ def main_merge():
 # -----------------------------------------------------------------------------
 # main - diff
 # -----------------------------------------------------------------------------
-def main_diff():
+def main_compare():
     parser = ArgumentParser()
     parser.add_argument('current', type=str, default = '')
     parser.add_argument('other',   type=str, default = '')
     parser.add_argument('--type',  type=str, default = '')
     args = parser.parse_args()
-    return merge(args.type, args.current, args.base, args.other)
+    return compare(args.type, args.current, args.other)
 # -----------------------------------------------------------------------------
 # main - minimize
 # -----------------------------------------------------------------------------
